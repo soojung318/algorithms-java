@@ -152,7 +152,7 @@
              Note: The pattern used is equivalent to using pattern="common" -->
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" pattern="%h %l %u %t &quot;%r&quot; %s %b" prefix="localhost_access_log" suffix=".txt"/>
 
-     <Context docBase="helloWeb2" path="/helloWeb2" reloadable="true" source="org.eclipse.jst.jee.server:helloWeb2"/></Host>
+     <Context docBase="helloWeb2" path="/helloWeb2" reloadable="true" source="org.eclipse.jst.jee.server:helloWeb2"/><Context docBase="helloWeb" path="/helloWeb" reloadable="true" source="org.eclipse.jst.jee.server:helloWeb"/></Host>
       <!-- context는 서바가 여기에 저장하고 실행함. 서버가 실행되면 이 코드가 사라짐. 근데 나중에 다른  하다보면 톰캣을 돌리다가 에러가 나는데, 톰캣 서버에 server.xml에 중복된 context가 있으면 
       실행이 잘 안되므로 중복된 코드를 지우고 실행을 하라. -->
     </Engine>

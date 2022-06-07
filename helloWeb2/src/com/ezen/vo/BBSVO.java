@@ -17,6 +17,23 @@ public class BBSVO {
 		this.no = no;
 	}
 
+	public BBSVO(String title, String content) {
+		this.title = title;
+		this.content = content;
+	}
+
+	public BBSVO(String[] bbsInfo) {
+		this(Integer.parseInt(bbsInfo[0]),bbsInfo[1],bbsInfo[2],Date.valueOf(bbsInfo[3]),bbsInfo[4]);
+	}
+
+	public BBSVO(int no, String title,String writer, Date date, String content) {
+		this.no = no;
+		this.writer = writer;
+		this.title = title;
+		this.date = date;
+		this.content = content;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.no);

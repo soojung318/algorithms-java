@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="java.util.*,com.ezen.vo.BBSVO"%>
+    pageEncoding="UTF-8" %>
 
 <!DOCTYPE html>
 <html>

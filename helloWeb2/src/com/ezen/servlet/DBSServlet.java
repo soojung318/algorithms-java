@@ -19,11 +19,11 @@ public class DBSServlet extends HttpServlet {
 		response.setContentType("text/html; charset=utf-8");
 		request.setCharacterEncoding("utf-8");
 		
-		System.out.println("BBS Servlet Starting...");
+		//System.out.println("BBS Servlet Starting...");
 		
 		BBService svc = new BBService(request,response);
 		String view = svc.process();
-		System.out.println("view:"+view);
+	//	System.out.println("view:"+view);
 		if(view!=null) {
 			request.getRequestDispatcher(view).forward(request, response);
 		}

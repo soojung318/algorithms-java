@@ -1,5 +1,6 @@
 package com.ezen.service;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
@@ -52,13 +53,53 @@ public class BBService {
 				e.printStackTrace();
 			}
 		}
-		else if(cmd.equals("list")) {
+		else if(cmd.equals("list"))
+		{
 			BBSDAO dao = new BBSDAO();
 			List<BBSVO> list = dao.getList();
 			request.setAttribute("list", list);
 			return "/bbs/list.jsp";
 		}
-
+		else if(cmd.equals("detail"))
+		{
+			int num = Integer.parseInt(request.getParameter("num"));
+			BBSDAO dao = new BBSDAO();
+			BBSVO bbs = dao.getBBS(num);
+			request.setAttribute("bbs", bbs);
+			return "/bbs/detail.jsp";
+		}
+		
+		else if(cmd.equals("edit")) {
+			int num = Integer.parseInt(request.getParameter("num"));
+			//String uid = (String)request.getSession().getAttribute("uid");
+			BBSDAO dao = new BBSDAO();
+			BBSVO bbs = dao.getBBS(num);
+			request.setAttribute("bbs", bbs);
+			return "/bbs/edit_bbs.jsp";
+		}
+		else if(cmd.equals("update")) {
+			int num = Integer.parseInt(request.getParameter("num"));
+			String title = request.getParameter("title");
+			String content = request.getParameter("content");
+			System.out.println("title:"+title);
+			System.out.println("content:"+content);
+			BBSVO bbs = new BBSVO();
+			bbs.setNo(num);
+			bbs.setTitle(title);
+			bbs.setContent(content);
+	
+			
+			BBSDAO dao = new BBSDAO();
+			boolean updated = dao.update(bbs);
+			PrintWriter out;
+			try {
+				out = response.getWriter();
+				out.println(String.format("{\"%s\":%b}","updated", updated));
+				out.flush();
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
 		return null;
 	}
 	

@@ -25,6 +25,8 @@ public ITBook(String title, String pub, String pubdate, String author, Integer p
 		this.idx = idx;
 	}
 
+
+
 	//equals와 hashcode는 짝꿍임.
 	@Override
 	public boolean equals(Object obj) {	//저자, 제목, 출판일

@@ -38,21 +38,14 @@ public class BookCart {
 	}
 
 
-	public boolean updatedQty(int idx, int qty) {
-		List<ITBook> list =  getCart();
+	public boolean updateQty(int idx, int qty) {
 		list.get(idx).setQty(qty);
 		return true;
 	}
-	public boolean delete(int idx) {
-		List<ITBook> list =  getCart();
-		list.remove(idx);
-		return true;
-	}
-
-
-	public boolean deleteAll() {
-		list.clear();
-		return true;
+	
+	public boolean remove(int idx) {
+		ITBook removedBook = list.remove(idx);
+		return removedBook != null;
 	}
 	
 }

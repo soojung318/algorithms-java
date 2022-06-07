@@ -89,7 +89,7 @@ public class ShopService {
 			int idx = Integer.parseInt(request.getParameter("idx"));
 			int qty = Integer.parseInt(request.getParameter("qty"));
 			BookCart cart = (BookCart)request.getSession().getAttribute("cart");
-			boolean updated = cart.updatedQty(idx,qty);
+			boolean updated = cart.updateQty(idx,qty);
 			int total = cart.getTotal();
 			PrintWriter out;
 			try {
@@ -105,7 +105,7 @@ public class ShopService {
 		else if(cmd.equals("remove")) {
 			int idx = Integer.parseInt(request.getParameter("idx"));
 			BookCart cart = (BookCart)request.getSession().getAttribute("cart");
-			boolean removed = cart.delete(idx);
+			boolean removed = cart.remove(idx);
 			PrintWriter out;
 			try {
 				out = response.getWriter();
@@ -118,15 +118,15 @@ public class ShopService {
 		
 		else if(cmd.equals("removeAll")) {
 			BookCart cart = (BookCart)request.getSession().getAttribute("cart");
-			boolean removedAll = cart.deleteAll();
+			cart.getCart().clear();
 			PrintWriter out;
 			try {
 				out = response.getWriter();
-				out.println("{\"removedAll\":"+removedAll+"}");
+				out.println("{\"empty\":"+true+"}");
 				out.flush();
-			}catch(IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
-			}	
+			}
 		}
 		return null;
 	}//end of process()
