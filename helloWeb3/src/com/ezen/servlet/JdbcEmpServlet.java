@@ -21,8 +21,9 @@ public class JdbcEmpServlet extends HttpServlet {
 		
 		JdbcEmpSvc svc = new JdbcEmpSvc(response,request);
 		String view = svc.process();
-		
-		request.getRequestDispatcher(view).forward(request, response);
+		if(view != null) {
+			request.getRequestDispatcher(view).forward(request, response);			
+		}
 	}
 
 }

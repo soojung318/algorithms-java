@@ -13,6 +13,30 @@
 	nav {width:fit-content; margin:1em auto;}
 	a {text-decoration:none; color:blue;}
 </style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+function remove(empno){
+	var obj = {};	//빈 오브젝트.(key,value)가 아무고토 옶음. json데이터가 아무것도 없다.
+	obj.cmd = 'delete';
+	obj.empno = empno;
+	if(!confirm('정말로 삭제하시겠어요?')) return;  	
+	$.ajax({
+		url:'jdbcemp',
+		method:'post',
+		cache:false,
+		data:obj,
+		dataType:'json',
+		success:function(res){
+			alert(res.deleted ? '삭제 성공' : '삭제 실패');
+			 location.href="jdbcemp?cmd=list";
+		},
+		error:function(xhr,status,err){
+			alert('Error:'+err);
+		}			
+	});
+	return false;
+}
+</script>
 </head>
 <body>
 <main>
@@ -26,6 +50,7 @@
 </div>
 <hr>
 <nav>[<a href="jdbcemp?cmd=edit&empno=${emp.empno }">수정</a>]</nav>
+<nav>[<a href="javascript:remove(${emp.empno })">삭제</a>]</nav>
 </main>
 </body>
 </html>

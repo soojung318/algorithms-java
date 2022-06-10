@@ -14,26 +14,31 @@
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script type="text/javascript">
-	function update(){
-		
-		if(!confirm('입력하신 정보로 변경하시겠어요?')) return false; // 아니라면 false 
-		var formadata = $('#edit_form').serialize();
-		//alert(formdata);
-		$.ajax({
-			url:'jdbcemp',
-			method:'post',
-			cache:false,
-			data:formdata,
-			dataType:'json',
-			success:function(res){
-				alert(res.updated? "수정 성공":"Failed");
-				location.href='jdbcemp?cmd=getEmp&empno=${emp.empno}';
-			},
-			error:function(xhr,status,err){
-				alert(err);
-			}
-		});
-		return false;
+function update(){
+	   if(!confirm('입력하신 값으로 수정하겠습니까?')) return false;
+	   var formdate=$('#edit_form').serialize();
+	   alert(formdate);
+	   $.ajax({
+	       url:'jdbcemp',
+	       method:'post',
+	       cache:false,
+	       data:formdate,
+	       dataType:'json',
+	       success:function(res){
+	          alert(res.updated? '수정성공':'실패' );
+	          location.href='jdbcemp?cmd=getEmp&empno=${emp.empno}';
+	          
+	       },
+	       error:function(xhr,status,err){
+	          alert(err);
+	       }
+	   
+	       
+	      
+	   });
+	   return false;
+	   
+	   
 	}
 	
 </script>

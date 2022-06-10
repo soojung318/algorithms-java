@@ -160,12 +160,12 @@ public class EmployeeDAO
       return null;
    }
 
-   public Employee searchByName(String ename2) {
+   public Employee searchByName(String name) {
 	   conn = getConn();
 	      try {
 	         String sql = "SELECT * FROM employee WHERE ename=?";
 	         pstmt = conn.prepareStatement(sql);
-	         pstmt.setString(1, ename2);
+	         pstmt.setString(1, name);
 	         rs = pstmt.executeQuery();
 	         if(rs.next()) {
 	            int eno = rs.getInt("EMPNO");
@@ -190,7 +190,42 @@ public class EmployeeDAO
 	         closeAll();
 	      }
 	      return null;
-
-	
 	}
+
+public List<String> getItemList(String category) {
+	conn = getConn();
+	try {
+		String sql = "SELECT "+category+" FROM employee";
+		pstmt = conn.prepareStatement(sql);
+		rs = pstmt.executeQuery();
+		List<String> list = new ArrayList<>();
+		while(rs.next()) {
+			list.add(rs.getString(category));
+		}
+		return list;
+	}catch(Exception e) {
+		e.printStackTrace();
+	}finally {
+		closeAll();
+	}
+	return null;
+}
+
+public boolean delete(int empno) {
+	  conn = getConn();
+      try {
+         String sql = "DELETE FROM employee WHERE empno=?";
+         pstmt = conn.prepareStatement(sql);
+         pstmt.setInt(1, empno);
+         int n = pstmt.executeUpdate();
+         return n>0;
+      }catch(Exception e) {
+         e.printStackTrace();
+      }finally {
+         closeAll();
+      }
+	return false;
+}
+   
+
 }

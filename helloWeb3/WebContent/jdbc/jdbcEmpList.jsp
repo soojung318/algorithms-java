@@ -11,21 +11,55 @@
 <title>사원정보 출력</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script type="text/javascript">
-	function test(){
-		//console.log($('#input_form').serialize());
-		var formdata = $('#input_form').serialize();
-		$.ajax({
-			url:'jdbcemp',
-			method:'post',
-			cache:false,
-			data:formdata,
-			dataType:'json',
-			success:function(res){
-				alert(res.)
-			}
+	$(function(){
+		$('input[type=radio]').click(function(evt){
+			var category = evt.target.value;
+			$('#key').val('');
+			var obj = {};
+			obj.cmd = 'getItemList';
+			obj.category = category;
+			
+			$.ajax({
+				url:'jdbcemp',
+				method:'post',
+				cache:false,
+				data:obj,
+				dataType:'text',
+				success:function(res){
+					var obj = JSON.parse(res);
+					var options = "";
+					for(var i=0; i<obj.length; i++){
+						options += "<option value='"+obj[i]+"'>";
+					}
+					$('#list').html(options);
+				},
+				error:function(xhr,status,err){
+					alert(err);
+				}
+			});
 		});
-		return false;
-	}
+		//.은 클랙스 셀렉터
+		$('.td_empno').mouseover(function(evt){
+			var empno = $(evt.target).text();
+			var obj = {};
+			obj.cmd = 'getImage';
+			obj.empno = empno;
+				
+			$.ajax({
+				url:'jdbcemp',
+				method:'post',
+				cache:false,
+				data:obj,
+				dataType:'json',
+				success:function(res){
+					$('#img1').attr("src","images/"+res.pic);
+				},
+				error:function(xhr,status,err){
+					alert('Error:'+err);
+				}
+			});
+		});
+	});
 </script>
 <style type="text/css">
 	table,th,td{ border: 1px black solid; margin:0 auto; border-collapse:collapse; 
@@ -37,14 +71,15 @@
 </style>
 </head>
 <body>
-<h2>사원정보 출력</h2>
+<main>
+<h2>사원정보 목록</h2>
 
 <table>
 
 <tr><th>사원번호</th><th>이름</th><th>부서번호</th><th>급여</th><th>고용날짜</th></tr>
 <c:forEach var="emp" items="${list}">
 <tr>
-<td>${emp.empno}</td>
+<td class="td_empno">${emp.empno}</td>
 <td><a href="jdbcemp?cmd=getEmp&empno=${emp.empno}">${emp.ename}</a></td>
 <td><a href="jdbcemp?cmd=empByDeptno&deptno=${emp.deptno}">${emp.deptno }</a></td>
 <td>${emp.sal}</td>
@@ -52,20 +87,18 @@
 </tr>
 </c:forEach>
 </table>
-<form id="input_form" onsubmit="return test();">
+<form action="jdbcemp">
+	<input type="hidden" name="cmd" value="search">
 	<div>
-		<label>사번으로 검색</label>
-		<input type="radio" id="empno" name="empno" value="empno">
-	</div>
-	<div>
-		<label>이름으로 검색</label>
-		<input type="radio" id="ename" name="ename" value="ename">
-	</div>
-	<div>
-		<button type="reset">취소</button>
-		<button type="submit">전송</button>
+		사번으로 검색<input type="radio" name="category" value="empno">
+		이름으로 검색<input type="radio" name="category" value="ename">
+		검색어<input type="text" id="key" name="key" list="list">
+		<button type="submit">검색</button>
 	</div>
 </form>
+</main>
+<datalist id="list"></datalist>
+<img id="img1">
 <!-- <div><a href="jdbcemp?cmd=add">사원 추가</a></div> -->
 </body>
 </html>

@@ -6,8 +6,13 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import com.ezen.dao.EmployeeDAO;
 import com.ezen.vo.Employee;
+
+
 
 public class JdbcEmpSvc {
 	
@@ -34,22 +39,32 @@ public class JdbcEmpSvc {
 		else if(cmd.equals("getEmp")) {	//한 사원만 가져옴,사번으로 검색
 			int empno = Integer.parseInt(request.getParameter("empno"));
 			EmployeeDAO dao = new EmployeeDAO();
-			Employee emp = getEmp(empno);
+			Employee emp =dao.getEmp(empno);
 			request.setAttribute("emp", emp);
 			return "/jdbc/empInfo.jsp";
 		}
-		else if(cmd.equals("empByDeptno")) {//부서내 사원 정보만 가져옴
+		else if(cmd.equals("empByDept")) {//부서내 사원 정보만 가져옴
 			int deptno = Integer.parseInt(request.getParameter("deptno"));
 			EmployeeDAO dao = new EmployeeDAO();
 			List<Employee> list = dao.getEmpByDept(deptno);
 			request.setAttribute("list", list);
 			return "/jdbc/empByDept.jsp";
 		}
-		else if(cmd.equals("empByename")) {	//이름으로 검색
-			String ename = request.getParameter("ename");
+		else if(cmd.equals("search")) {
 			EmployeeDAO dao = new EmployeeDAO();
-			Employee emp = dao.searchByName(ename);
-			request.setAttribute("emp", emp);
+			String category = request.getParameter("category");
+			String key = request.getParameter("key");
+			Employee emp = null;
+			
+			if(category.equals("empno")) {
+				int empno = Integer.parseInt(key);
+				emp = dao.getEmp(empno);
+				request.setAttribute("emp", emp);
+			}else if(category.equals("ename")) {
+				String ename = key;
+				emp = dao.searchByName(ename);
+				request.setAttribute("emp", emp);
+			}
 			return "/jdbc/empInfo.jsp";
 		}
 		else if(cmd.equals("edit")) {
@@ -81,8 +96,61 @@ public class JdbcEmpSvc {
 				// TODO Auto-generated catch block
 			  	e.printStackTrace();
 			}
+		}else if(cmd.equals("getItemList")) {
+			String category = request.getParameter("category");
+			EmployeeDAO dao = new EmployeeDAO();
+			List<String> list = dao.getItemList(category);
+			
+			//JSON-Simple
+			JSONArray jsArr = new JSONArray();
+			for(int i=0; i<list.size(); i++) {
+				jsArr.add(list.get(i));
+			}
+			String items = jsArr.toJSONString();
+			/*String items = "[";
+			for(int i=0; i<list.size(); i++) {
+				items += String.format("\"%s\"", list.get(i));
+				if(i<list.size()-1) {
+					items += ",";
+				}
+			}
+			items += "]";
+			*/
+			try {
+				PrintWriter out = response.getWriter();
+				out.println(items);
+				out.flush();
+			}catch(IOException ioe) {
+				ioe.printStackTrace();
+			}
 		}
-
+		else if(cmd.equals("getImage")) {
+			String empno = request.getParameter("empno");
+			String imgPath = empno + ".png";
+			JSONObject jsObj = new JSONObject();
+			jsObj.put("pic", imgPath);
+			try {
+				PrintWriter out = response.getWriter();
+				out.println(jsObj.toJSONString());
+				out.flush();
+			}catch(IOException ioe) {
+				ioe.printStackTrace();
+			}
+		}
+		else if(cmd.equals("delete")) {	
+			int empno = Integer.parseInt(request.getParameter("empno"));
+			EmployeeDAO dao = new EmployeeDAO();
+			boolean deleted = dao.delete(empno);
+			JSONObject jsObj = new JSONObject();
+			jsObj.put("deleted", deleted);
+			try {
+				PrintWriter out = response.getWriter();
+				out.println(jsObj.toJSONString());
+				out.flush();
+			}catch(IOException ioe) {
+				ioe.printStackTrace();
+			}
+		}	
 		return null;
 	}
 
